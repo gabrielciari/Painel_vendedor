@@ -286,7 +286,14 @@
 </table>
 
   </div>  <script>
-    let emprestimos = [];
+    let emprestimos = JSON.parse(localStorage.getItem('emprestimosIsabela')) || [];
+
+    atualizarTabela();
+    atualizarCards();
+
+    function salvarDados() {
+      localStorage.setItem('emprestimosIsabela', JSON.stringify(emprestimos));
+    }
 
     function adicionarEmprestimo() {
       const banco = document.getElementById('banco').value;
@@ -312,6 +319,8 @@
       };
 
       emprestimos.unshift(emprestimo);
+
+      salvarDados();
 
       atualizarTabela();
       atualizarCards();
@@ -417,6 +426,8 @@
     function confirmarRemocao(id) {
       emprestimos = emprestimos.filter(emp => emp.id !== id);
 
+      salvarDados();
+
       atualizarTabela();
       atualizarCards();
 
@@ -426,8 +437,10 @@
     function remover(id) {
       emprestimos = emprestimos.filter(emp => emp.id !== id);
 
+      salvarDados();
+
       atualizarTabela();
       atualizarCards();
     }
   </script></body>
-    </html>
+      </html>
