@@ -1,545 +1,433 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html><html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Painel de Fornecedor - LevelUp Store</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-/* --- Reset e fontes --- */
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: 'Montserrat', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    color: #fff;
-    overflow-x: hidden;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema da Isabela</title>  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-@keyframes gradientBG {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
-}
+    body {
+      background: #0f0f0f;
+      color: white;
+      padding: 20px;
+    }
 
-/* --- Layout geral --- */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    width: calc(100% - 40px);
-}
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
 
-/* --- Login --- */
-#login, #panel {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 20px;
-    box-sizing: border-box;
-}
+    h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
 
-#login-box {
-    background: rgba(0,0,0,0.85);
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-    text-align: center;
-    width: 360px;
-}
+    .desc {
+      color: #999;
+      margin-bottom: 30px;
+    }
 
-#login-box h2 {
-    margin-bottom: 18px;
-    color: #00c6ff;
-    text-shadow: 1px 1px 5px #000;
-}
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
 
-#login-box input {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 8px;
-    border: none;
-    font-size: 15px;
-    outline: none;
-}
+    .card {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid #2d2d2d;
+    }
 
-#login-box button {
-    padding: 12px 20px;
-    width: 100%;
-    border: none;
-    background: linear-gradient(45deg, #00c6ff, #0072ff);
-    color: white;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.25s;
-}
+    .card p {
+      color: #aaa;
+      margin-bottom: 10px;
+    }
 
-#login-box button:hover { transform: translateY(-3px); }
+    .card h2 {
+      font-size: 30px;
+    }
 
-/* --- Painel --- */
-#panel {
-    display: none;
-    flex-direction: column;
-    padding: 30px;
-    min-height: 100vh;
-    width: 100%;
-}
+    .form-box {
+      background: #1a1a1a;
+      padding: 25px;
+      border-radius: 20px;
+      border: 1px solid #2d2d2d;
+      margin-bottom: 30px;
+    }
 
-.header-row {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom: 20px;
-}
+    .inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
 
-.header-row h2 {
-    margin: 0;
-    color:#00c6ff;
-    text-shadow: 1px 1px 5px #000;
-}
+    input,
+    select {
+      background: #111;
+      border: 1px solid #333;
+      color: white;
+      padding: 14px;
+      border-radius: 12px;
+      outline: none;
+    }
 
-/* grid produtos + carrinho */
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 24px;
-    align-items: start;
-}
+    button {
+      margin-top: 20px;
+      background: #7c3aed;
+      color: white;
+      border: none;
+      padding: 14px 25px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
 
-/* produtos */
-.products {
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
-    gap: 20px;
-}
+    button:hover {
+      background: #6d28d9;
+    }
 
-.product-card {
-    background: rgba(255,255,255,0.05);
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-    padding: 18px;
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
-    position: relative;
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1a1a1a;
+      border-radius: 20px;
+      overflow: hidden;
+    }
 
-.product-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 15px 25px rgba(0,0,0,0.7);
-}
+    th {
+      background: #222;
+      padding: 15px;
+      text-align: left;
+    }
 
-.product-card h3 { margin:10px 0 6px; color:#00c6ff; }
-.product-card p { margin:6px 0; font-weight:bold; }
-.product-card input[type="number"], .product-card input[type="text"] {
-    width:100%; padding:8px; margin:6px 0; border-radius:8px; border:none; outline:none;
-}
-.product-card button {
-    padding:10px 12px; background:linear-gradient(45deg,#00c6ff,#0072ff); color:white; border:none; border-radius:8px; cursor:pointer;
-}
-.new-badge {
-    position:absolute; top:10px; right:10px;
-    background:#ffdc00; color:#000; padding:5px 10px; font-size:12px; font-weight:700; border-radius:8px; box-shadow:0 3px 6px rgba(0,0,0,0.4);
-}
+    td {
+      padding: 15px;
+      border-top: 1px solid #2d2d2d;
+    }
 
-/* carrinho */
-#carrinho {
-    background: rgba(0,0,0,0.75);
-    padding: 18px;
-    border-radius: 15px;
-    margin-top: 0;
-    position: sticky;
-    top: 20px;
-    height: fit-content;
-}
+    .status {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: bold;
+    }
 
-#carrinho h3 { color:#00c6ff; margin-top:0; margin-bottom:12px; }
-#itensCarrinho { max-height: 400px; overflow:auto; margin-bottom:12px; }
-.carrinho-item {
-    display:flex; justify-content:space-between; align-items:center; gap:8px;
-    padding:8px; background: rgba(255,255,255,0.03); border-radius:8px; margin-bottom:8px;
-}
-.carrinho-item span { flex:1; font-size:14px; }
-.carrinho-item button { background:#ff4c4c; padding:6px 8px; border-radius:6px; border:none; cursor:pointer; color:#fff; }
+    .pendente {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+    }
 
-/* input código fornecedor dentro do carrinho */
-#codigoFornecedor {
-    width:100%; padding:10px; border-radius:8px; border:2px solid rgba(255,255,255,0.08); outline:none; font-size:15px;
-    box-sizing: border-box;
-}
-#codigoFornecedor.valid { border-color: #4ade80; box-shadow: 0 0 8px rgba(74,222,128,0.12); }
-#codigoFornecedor.invalid { border-color: #ff6b6b; box-shadow: 0 0 8px rgba(255,107,107,0.08); }
+    .pago {
+      background: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+    }
 
-/* total e botão enviar */
-#totalCarrinho { text-align:right; font-weight:700; color:#00c6ff; margin-top:8px; }
-#btnEnviar {
-    margin-top:12px; width:100%; padding:12px; font-size:16px; border:none; border-radius:10px; cursor:pointer;
-    background: linear-gradient(45deg,#00c6ff,#0072ff); color:white; font-weight:700; transition:0.25s;
-}
-#btnEnviar[disabled] { opacity:0.5; cursor:not-allowed; transform:none; }
+    .atrasado {
+      background: rgba(220, 53, 69, 0.2);
+      color: #dc3545;
+    }
 
-/* pop-up customizada */
-#popup { display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:10000; }
-.popup-bg { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); }
-.popup-box {
-    position:absolute; top:-220px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#00c6ff,#0072ff);
-    padding:22px 26px; border-radius:14px; color:#fff; box-shadow:0 10px 35px rgba(0,0,0,0.5); max-width:90%;
-    transition: top 0.45s ease;
-}
-.popup-box.show { top:50%; transform: translate(-50%,-50%); }
-.popup-msg { margin-bottom:12px; font-size:15px; }
-.popup-actions { display:flex; gap:10px; justify-content:center; }
-.popup-actions button { padding:8px 14px; border-radius:10px; border:none; cursor:pointer; font-weight:700; }
+    .delete {
+      background: #dc3545;
+      padding: 10px 15px;
+      border-radius: 10px;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
 
-/* toast */
-#toast { position:fixed; bottom:20px; right:20px; background:#00c6ff; color:#fff; padding:12px 18px; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,0.4); opacity:0; transform:translateY(18px); transition:all .35s ease; z-index:10001; }
-#toast.show { opacity:1; transform:translateY(0); }
+    .delete:hover {
+      background: #b02a37;
+    }
 
-/* responsivo */
-@media (max-width: 980px) {
-    .grid { grid-template-columns: 1fr; }
-    #login-box { width: 92%; }
-}
-</style>
-</head>
-<body>
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      animation: fade 0.2s ease;
+    }
 
-<!-- LOGIN -->
-<div id="login">
-    <div id="login-box" class="container">
-        <h2>Entrar como Fornecedor</h2>
-        <input type="text" id="codigo" placeholder="Digite seu código (ex: FORNECEDOR123)" />
-        <input type="text" id="telefone" placeholder="Digite seu telefone (ex: +5562 9xxxx-xxxx)" />
-        <button onclick="entrar()">Entrar</button>
-        <p class="error" id="error" style="color:#ff6b6b; font-weight:700; margin-top:8px;"></p>
-    </div>
+    .popup-box {
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid #333;
+      text-align: center;
+      animation: subir 0.25s ease;
+    }
+
+    .popup-box h2 {
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .popup-box p {
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .cancelar {
+      background: #333;
+    }
+
+    .cancelar:hover {
+      background: #444;
+    }
+
+    .confirmar {
+      background: #7c3aed;
+    }
+
+    .confirmar:hover {
+      background: #6d28d9;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes subir {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style></head>
+<body>  <div class="container">
+    <h1>Sistema da Isabela 💜</h1>
+    <p class="desc">Controle de dinheiro emprestado usando bancos e cartões.</p><div class="cards">
+  <div class="card">
+    <p>Total emprestado</p>
+    <h2 id="totalEmprestado">R$ 0,00</h2>
+  </div>
+
+  <div class="card">
+    <p>Total com juros</p>
+    <h2 id="totalJuros">R$ 0,00</h2>
+  </div>
+
+  <div class="card">
+    <p>Pessoas cadastradas</p>
+    <h2 id="quantidade">0</h2>
+  </div>
 </div>
 
-<!-- PAINEL -->
-<div id="panel" class="container">
-    <div class="header-row">
-        <h2>Bem-vindo, Fornecedor!</h2>
-        <div style="text-align:right;">
-            <div id="welcomeInfo" style="font-size:14px; color: #dff6ff"></div>
-        </div>
-    </div>
+<div class="form-box">
+  <h2>Novo empréstimo</h2>
 
-    <div class="grid">
-        <div>
-            <div class="products" id="products"></div>
-        </div>
+  <div class="inputs">
+    <input type="text" id="banco" placeholder="Banco ou cartão usado">
 
-        <aside id="carrinho">
-            <h3>Carrinho</h3>
-            <div id="itensCarrinho">Nenhum item no carrinho</div>
+    <input type="text" id="pessoa" placeholder="Nome da pessoa">
 
-            <div style="margin:10px 0;">
-                <input type="text" id="codigoFornecedor" placeholder="Digite seu código de fornecedor" oninput="validarCodigoFornecedor()" />
+    <input type="number" id="valor" placeholder="Valor emprestado">
+
+    <input type="number" id="juros" placeholder="Juros (%)">
+
+    <input type="date" id="data">
+
+    <select id="status">
+      <option>Pendente</option>
+      <option>Pago</option>
+      
+    </select>
+  </div>
+
+  <button onclick="adicionarEmprestimo()">Adicionar empréstimo</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Banco</th>
+      <th>Pessoa</th>
+      <th>Valor</th>
+      <th>Total c/ Juros</th>
+      <th>Juros</th>
+      <th>Data</th>
+      <th>Status</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+
+  <tbody id="tabelaEmprestimos">
+  </tbody>
+</table>
+
+  </div>  <script>
+    let emprestimos = [];
+
+    function adicionarEmprestimo() {
+      const banco = document.getElementById('banco').value;
+      const pessoa = document.getElementById('pessoa').value;
+      const valor = parseFloat(document.getElementById('valor').value);
+      const juros = parseFloat(document.getElementById('juros').value) || 0;
+      const data = document.getElementById('data').value;
+      const status = document.getElementById('status').value;
+
+      if (!banco || !pessoa || !valor) {
+        alert('Preencha os campos obrigatórios!');
+        return;
+      }
+
+      const emprestimo = {
+        id: Date.now(),
+        banco,
+        pessoa,
+        valor,
+        juros,
+        data,
+        status
+      };
+
+      emprestimos.unshift(emprestimo);
+
+      atualizarTabela();
+      atualizarCards();
+
+      document.getElementById('banco').value = '';
+      document.getElementById('pessoa').value = '';
+      document.getElementById('valor').value = '';
+      document.getElementById('juros').value = '';
+      document.getElementById('data').value = '';
+    }
+
+    function atualizarTabela() {
+      const tabela = document.getElementById('tabelaEmprestimos');
+      tabela.innerHTML = '';
+
+      emprestimos.forEach(emp => {
+        let classe = 'pendente';
+
+        if (emp.status === 'Pago') {
+          classe = 'pago';
+        }
+
+        tabela.innerHTML += `
+          <tr>
+            <td>${emp.banco}</td>
+            <td>${emp.pessoa}</td>
+            <td>R$ ${emp.valor.toFixed(2)}</td>
+            <td>
+              R$ ${(emp.valor + (emp.valor * emp.juros / 100)).toFixed(2)}
+            </td>
+            <td>${emp.juros}%</td>
+            <td>${emp.data || '---'}</td>
+
+            <td>
+              <select onchange="alterarStatus(${emp.id}, this.value)" class="status ${classe}">
+                <option value="Pendente" ${emp.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                <option value="Pago">Pago</option>
+              </select>
+            </td>
+
+            <td>
+              <button class="delete" onclick="remover(${emp.id})">
+                Excluir
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function atualizarCards() {
+      const total = emprestimos.reduce((acc, emp) => acc + emp.valor, 0);
+
+      const totalComJuros = emprestimos.reduce((acc, emp) => {
+        return acc + (emp.valor + (emp.valor * emp.juros / 100));
+      }, 0);
+
+      document.getElementById('totalEmprestado').innerText = `R$ ${total.toFixed(2)}`;
+      document.getElementById('totalJuros').innerText = `R$ ${totalComJuros.toFixed(2)}`;
+      document.getElementById('quantidade').innerText = emprestimos.length;
+    }
+
+    function alterarStatus(id, novoStatus) {
+      if (novoStatus === 'Pago') {
+        abrirPopup(id);
+      }
+    }
+
+    function abrirPopup(id) {
+      const popup = document.createElement('div');
+      popup.id = 'popupConfirmacao';
+
+      popup.innerHTML = `
+        <div class="popup-overlay">
+          <div class="popup-box">
+            <h2>Empréstimo pago 💸</h2>
+            <p>Deseja remover este empréstimo da lista?</p>
+
+            <div class="popup-buttons">
+              <button class="cancelar" onclick="fecharPopup()">
+                Cancelar
+              </button>
+
+              <button class="confirmar" onclick="confirmarRemocao(${id})">
+                Confirmar
+              </button>
             </div>
-
-            <div id="totalCarrinho">Total: R$0,00</div>
-            <button id="btnEnviar" onclick="confirmarEnvio()" disabled>Enviar todos produtos pelo WhatsApp</button>
-        </aside>
-    </div>
-</div>
-
-<!-- POPUP -->
-<div id="popup">
-    <div class="popup-bg" onclick="fecharPopup()"></div>
-    <div class="popup-box" id="popupBox" role="dialog" aria-modal="true">
-        <div class="popup-msg" id="popup-msg"></div>
-        <div class="popup-actions" id="popup-actions">
-            <button id="popup-btn-cancel" style="background:rgba(255,255,255,0.2); color:#fff;" onclick="fecharPopup()">Cancelar</button>
-            <button id="popup-btn-ok" style="background:#fff; color:#0072ff;" onclick="fecharPopup()">OK</button>
+          </div>
         </div>
-    </div>
-</div>
+      `;
 
-<!-- TOAST -->
-<div id="toast"></div>
-
-<script>
-/* ====== Configs / dados ====== */
-const codigosLiberados = ["FORNECEDOR123","VIP2025","LEVELUP","CODIGOEXTRA"];
-const suporteWhats = "+556296094975";
-
-const produtos = [
-    {id:1, nome:"Conta Fake 20k Avacoins", preco:"R$3,99", tipo:"normal", novo:true},
-    {id:2, nome:"Conta Fake 25k Avacoins", preco:"R$4,99", tipo:"normal", novo:false},
-    {id:3, nome:"Likes Avakin Life 1500", preco:"R$26,50", tipo:"avakin", novo:true},
-    {id:4, nome:"Views Avakin Life 3000", preco:"R$49,99", tipo:"avakin", novo:false}
-];
-
-let carrinho = [];
-let loginCodigo = null; // código que o usuário usou no login
-
-/* ====== Login ====== */
-function entrar(){
-    const codigo = document.getElementById("codigo").value.trim();
-    const telefone = document.getElementById("telefone").value.trim();
-    const error = document.getElementById("error");
-    error.textContent = "";
-
-    if(!codigo){
-        mostrarPopupMsg("Digite um código!");
-        return;
-    }
-    if(!telefone){
-        mostrarPopupMsg("Digite seu telefone!");
-        return;
-    }
-    // validação do código contra a lista (server-side é recomendado, aqui é validação UX)
-    if(!codigosLiberados.includes(codigo)){
-        mostrarPopupMsg("Código não liberado!");
-        return;
+      document.body.appendChild(popup);
     }
 
-    // salvar telefone e código no sessionStorage (curto prazo)
-    sessionStorage.setItem("telefoneFornecedor", telefone);
-    sessionStorage.setItem("codigoFornecedorLogin", codigo);
-    loginCodigo = codigo;
+    function fecharPopup() {
+      const popup = document.getElementById('popupConfirmacao');
 
-    document.getElementById("login").style.display = "none";
-    document.getElementById("panel").style.display = "block";
-    document.getElementById("welcomeInfo").textContent = `Logado como: ${codigo} • ${telefone}`;
-
-    carregarProdutos();
-}
-
-/* ====== Produtos e Carrinho ====== */
-function carregarProdutos(){
-    const container = document.getElementById("products");
-    container.innerHTML = "";
-    produtos.forEach(prod => {
-        const card = document.createElement("div");
-        card.className = "product-card";
-
-        let camposExtras = '';
-        if(prod.tipo === "avakin"){
-            camposExtras = `
-                <input type="text" placeholder="Código de Amigo" class="codigoAmigo" />
-                <input type="text" placeholder="Nome do Perfil" class="nomePerfil" />
-            `;
-        }
-
-        const badge = prod.novo ? `<div class="new-badge">Novo</div>` : '';
-
-        card.innerHTML = `
-            ${badge}
-            <h3>${prod.nome}</h3>
-            <p>${prod.preco}</p>
-            <input type="number" min="1" value="1" class="quantidade" />
-            ${camposExtras}
-            <button onclick="adicionarCarrinho(${prod.id}, this)">Adicionar ao Carrinho</button>
-        `;
-        container.appendChild(card);
-    });
-    atualizarEnviarState();
-}
-
-function adicionarCarrinho(prodId, btn){
-    const produto = produtos.find(p => p.id === prodId);
-    const card = btn.parentElement;
-    const quantidade = parseInt(card.querySelector(".quantidade").value) || 1;
-
-    let codigoAmigo = "", nomePerfil = "";
-    if(produto.tipo === "avakin"){
-        const ca = card.querySelector(".codigoAmigo").value.trim();
-        const np = card.querySelector(".nomePerfil").value.trim();
-        if(!ca || !np){
-            mostrarPopupMsg("Preencha o código de amigo e o nome do perfil para produtos de Avakin Life!");
-            return;
-        }
-        codigoAmigo = ca;
-        nomePerfil = np;
+      if (popup) {
+        popup.remove();
+      }
     }
 
-    carrinho.push({produto, quantidade, codigoAmigo, nomePerfil});
-    atualizarCarrinho();
-    mostrarToast("Produto adicionado ao carrinho!");
-    tocarSom();
-    atualizarEnviarState();
-}
+    function confirmarRemocao(id) {
+      emprestimos = emprestimos.filter(emp => emp.id !== id);
 
-function atualizarCarrinho(){
-    const container = document.getElementById("itensCarrinho");
-    container.innerHTML = "";
-    if(carrinho.length === 0){
-        container.textContent = "Nenhum item no carrinho";
-        document.getElementById("totalCarrinho").textContent = `Total: R$0,00`;
-        return;
+      atualizarTabela();
+      atualizarCards();
+
+      fecharPopup();
     }
 
-    let total = 0;
-    carrinho.forEach((item, index) => {
-        const precoNumero = parseFloat(item.produto.preco.replace("R$","").replace(",","."));
-        total += precoNumero * item.quantidade;
+    function remover(id) {
+      emprestimos = emprestimos.filter(emp => emp.id !== id);
 
-        const div = document.createElement("div");
-        div.className = "carrinho-item";
-        div.innerHTML = `
-            <span>${item.produto.nome} x ${item.quantidade}${item.produto.tipo === "avakin" ? ` | ${item.codigoAmigo} - ${item.nomePerfil}` : ""}</span>
-            <button onclick="removerCarrinho(${index})">Remover</button>
-        `;
-        container.appendChild(div);
-    });
-
-    document.getElementById("totalCarrinho").textContent = `Total: R$${total.toFixed(2).replace(".",",")}`;
-}
-
-/* remover */
-function removerCarrinho(index){
-    carrinho.splice(index,1);
-    atualizarCarrinho();
-    mostrarToast("Produto removido do carrinho!");
-    atualizarEnviarState();
-}
-
-/* ====== Validação do código do carrinho ====== */
-function validarCodigoFornecedor(){
-    const input = document.getElementById("codigoFornecedor");
-    const val = input.value.trim();
-    // O requisito: "tem que ser exatamente oq tá cadastrado no código"
-    // verificamos que o campo bate com o código usado no login e que está na lista liberada.
-    const codigoLogin = sessionStorage.getItem("codigoFornecedorLogin") || loginCodigo;
-    const isValid = val !== "" && codigosLiberados.includes(val) && codigoLogin && val === codigoLogin;
-
-    input.classList.remove("valid","invalid");
-    if(val === "") {
-        // neutral
-    } else if(isValid){
-        input.classList.add("valid");
-    } else {
-        input.classList.add("invalid");
+      atualizarTabela();
+      atualizarCards();
     }
-    atualizarEnviarState();
-}
-
-/* ativa/desativa botão enviar */
-function atualizarEnviarState(){
-    const btn = document.getElementById("btnEnviar");
-    const codigoInput = document.getElementById("codigoFornecedor").value.trim();
-    const codigoLogin = sessionStorage.getItem("codigoFornecedorLogin") || loginCodigo;
-    const codigoOk = codigoInput !== "" && codigosLiberados.includes(codigoInput) && codigoInput === codigoLogin;
-    btn.disabled = !(carrinho.length > 0 && codigoOk);
-}
-
-/* ====== Confirmação e envio ====== */
-function confirmarEnvio(){
-    if(carrinho.length === 0){
-        mostrarPopupMsg("O carrinho está vazio!");
-        return;
-    }
-    const codigo = document.getElementById("codigoFornecedor").value.trim();
-    const codigoLogin = sessionStorage.getItem("codigoFornecedorLogin") || loginCodigo;
-    if(!codigo){
-        mostrarPopupMsg("Digite o código do fornecedor antes de enviar!");
-        return;
-    }
-    if(!codigosLiberados.includes(codigo) || codigo !== codigoLogin){
-        mostrarPopupMsg("Código de fornecedor inválido! Deve ser exatamente o código usado no login.");
-        return;
-    }
-
-    mostrarPopupConfirm("Deseja realmente enviar todos os produtos pelo WhatsApp?", () => {
-        enviarWhatsApp(codigo);
-    });
-}
-
-function enviarWhatsApp(codigoFornecedor){
-    const telefone = sessionStorage.getItem("telefoneFornecedor") || "";
-    let mensagem = `Olá! Meu telefone: ${telefone}\nCódigo de Fornecedor: ${codigoFornecedor}\nGostaria de pegar os seguintes produtos:\n\n`;
-
-    carrinho.forEach(item => {
-        mensagem += `Produto: ${item.produto.nome}\nPreço: ${item.produto.preco}\nQuantidade: ${item.quantidade}\n`;
-        if(item.produto.tipo === "avakin"){
-            mensagem += `Código de Amigo: ${item.codigoAmigo}\nNome do Perfil: ${item.nomePerfil}\n`;
-        }
-        mensagem += "\n";
-    });
-
-    const link = `https://api.whatsapp.com/send?phone=${suporteWhats}&text=${encodeURIComponent(mensagem)}`;
-    window.open(link, "_blank");
-}
-
-/* ====== Pop-up custom (mensagem simples e confirmação) ====== */
-function mostrarPopupMsg(msg){
-    const popup = document.getElementById("popup");
-    const box = document.getElementById("popupBox");
-    document.getElementById("popup-msg").textContent = msg;
-    // configurar para apenas OK
-    const actions = document.getElementById("popup-actions");
-    const btnOk = document.getElementById("popup-btn-ok");
-    const btnCancel = document.getElementById("popup-btn-cancel");
-    btnOk.textContent = "OK";
-    btnOk.style.background = "#fff";
-    btnOk.style.color = "#0072ff";
-    btnCancel.style.display = "none";
-    btnOk.onclick = fecharPopup;
-
-    popup.style.display = "block";
-    setTimeout(()=> box.classList.add("show"), 10);
-}
-
-function mostrarPopupConfirm(msg, onYes){
-    const popup = document.getElementById("popup");
-    const box = document.getElementById("popupBox");
-    document.getElementById("popup-msg").textContent = msg;
-    const btnOk = document.getElementById("popup-btn-ok");
-    const btnCancel = document.getElementById("popup-btn-cancel");
-    btnCancel.style.display = "inline-block";
-    btnOk.textContent = "Sim";
-    btnOk.style.background = "#fff";
-    btnOk.style.color = "#0072ff";
-    btnOk.onclick = () => {
-        fecharPopup();
-        setTimeout(()=> onYes && onYes(), 200);
-    };
-    btnCancel.onclick = fecharPopup;
-
-    popup.style.display = "block";
-    setTimeout(()=> box.classList.add("show"), 10);
-}
-
-function fecharPopup(){
-    const popup = document.getElementById("popup");
-    const box = document.getElementById("popupBox");
-    box.classList.remove("show");
-    setTimeout(()=> popup.style.display = "none", 400);
-}
-
-/* ====== Toast e som ====== */
-function mostrarToast(msg){
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.classList.add("show");
-    setTimeout(()=> t.classList.remove("show"), 2600);
-}
-
-function tocarSom(){
-    try{
-        const audio = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
-        audio.volume = 0.18;
-        audio.play().catch(()=>{/* autoplay block */});
-    }catch(e){}
-}
-
-/* ====== Inicialização: manter telefone/código se já estiver em sessionStorage ====== */
-(function initFromSession(){
-    const telefone = sessionStorage.getItem("telefoneFornecedor");
-    const codigo = sessionStorage.getItem("codigoFornecedorLogin");
-    if(telefone && codigo){
-        // se já tinha sessão, pular login automaticamente (opcional)
-        // não forçamos auto-login para segurança; mas preenchermos campos se o usuário voltar ao login.
-        const codigoInput = document.getElementById("codigo");
-        const telefoneInput = document.getElementById("telefone");
-        if(codigoInput) codigoInput.value = codigo;
-        if(telefoneInput) telefoneInput.value = telefone;
-    }
-})();
-</script>
-</body>
-</html>
+  </script></body>
+    </html>
