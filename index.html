@@ -288,8 +288,10 @@
   </div>  <script>
     let emprestimos = JSON.parse(localStorage.getItem('emprestimosIsabela')) || [];
 
-    atualizarTabela();
-    atualizarCards();
+    document.addEventListener('DOMContentLoaded', () => {
+      atualizarTabela();
+      atualizarCards();
+    });
 
     function salvarDados() {
       localStorage.setItem('emprestimosIsabela', JSON.stringify(emprestimos));
@@ -443,4 +445,4 @@
       atualizarCards();
     }
   </script></body>
-      </html>
+</html>
